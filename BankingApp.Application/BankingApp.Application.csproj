@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BankingApp.Core\BankingApp.Core.csproj" />
+  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="10.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />
+	</ItemGroup>
+</Project>

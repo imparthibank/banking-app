@@ -1,0 +1,26 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/banking-app/CopilotIndices/17.12.68.61481
+/.vs/banking-app/v17/TestStore/0
+/.vs/banking-app/v17
+/.vs/BankingApp/config/applicationhost.config
+/.vs/BankingApp/CopilotIndices/17.12.68.61481
+/.vs/BankingApp/copilot-chat/8a571303/sessions
+/.vs/BankingApp/DesignTimeBuild
+/.vs/BankingApp/FileContentIndex
+/.vs/BankingApp/v17
+/BankingApp.Application/bin/Debug/net5.0
+/.vs/ProjectEvaluation
+/BankingApp.Core/bin/Debug/net5.0
+/BankingApp.Core/obj
+/BankingApp.DataBase/bin/Debug/net5.0
+/BankingApp.DataBase/obj
+/BankingApp.Infrastructure/bin/Debug/net5.0
+/BankingApp.Infrastructure/obj
+/BankingApp.Tests/bin/Debug/net5.0
+/BankingApp.Tests/obj
+/BankingApp.WebApi/bin/Debug/net5.0
+/BankingApp.WebApi/obj
+/BankingApp.Application/obj
