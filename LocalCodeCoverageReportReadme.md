@@ -1,16 +1,3 @@
-# BankingApp - Hexagonal Architecture (.NET 5)
-
-This project follows a clean Hexagonal Architecture structure using:
-- ✅ ASP.NET Core Web API (.NET 5)
-- ✅ PostgreSQL with Dapper
-- ✅ Application-level validation and rule engine
-- ✅ ProblemDetails-based error handling
-- ✅ Custom error response with trace ID
-- ✅ Swagger API documentation
-- ✅ NUnit + Moq unit testing
-
----
-
 ## 🧪 Automate Local Code Coverage Report Generation
 
 A single-click `.bat` file can automate the entire coverage pipeline:
@@ -73,12 +60,6 @@ Line coverage: 78.5%
 - Enforce this check before Git push
 - Integrate into GitHub Actions later
 - Target 80%+ for critical services
-
----
-
-## 📦 Folder Structure
-
-See `/Adapters`, `/Ports`, `/UseCases`, `/Common`, and `/Errors` folders for clean layering.
 
 ---
 

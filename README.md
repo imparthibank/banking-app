@@ -118,6 +118,11 @@ CREATE TABLE bank_accounts (
 ```
 
 ---
+## 🧪 Automate Local Code Coverage Report Generation
+
+[A single-click `.bat` file can automate the entire coverage pipeline:](./LocalCodeCoverageReportReadme.md)
+
+---
 
 ## 🐳 Docker Support (Optional)
 
