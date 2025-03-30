@@ -1,12 +1,11 @@
-﻿using AutoMapper;
-using BankingApp.Application.Ports.Input;
+﻿using BankingApp.Application.Ports.Input;
 using BankingApp.Application.UseCases;
 using BankingApp.Application.Validation;
 using BankingApp.Core.Ports.Output;
 using BankingApp.Infrastructure.Adapters.Output.Repositories;
 using BankingApp.Infrastructure.Config;
+using BankingApp.WebApi.Middlewares;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +26,8 @@ namespace BankingApp.WebApi
             services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             services.AddScoped<IBankAccountService, BankAccountService>();
             services.AddScoped<IBankAccountValidator, BankAccountValidator>();
+            services.AddSwaggerDocumentation();
+
             services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddLogging(); // 👈 Adds logging support
 
@@ -48,6 +49,7 @@ namespace BankingApp.WebApi
             }
 
             app.UseRouting();
+            app.UseMiddleware<ExceptionMiddleware>(); // <-- Add this before UseRouting
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
