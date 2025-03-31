@@ -73,3 +73,6 @@
 /.vs/slnx.sqlite
 /ExcelUpload/BankingExcelUpload.POC/bin/Debug/net5.0
 /ExcelUpload/BankingExcelUpload.POC/obj
+/BankingApp.Tests/bin/Release/net5.0
+/ExcelUpload/ExcelBenchmark.PlayGround/bin
+/ExcelUpload/ExcelBenchmark.PlayGround/obj
