@@ -8,7 +8,7 @@
     <ProjectReference Include="..\BankingApp.Application\BankingApp.Application.csproj" />
     <ProjectReference Include="..\BankingApp.Core\BankingApp.Core.csproj" />
     <ProjectReference Include="..\BankingApp.Infrastructure\BankingApp.Infrastructure.csproj" />
-    <ProjectReference Include="..\BankingApp.WebApi\BankingApp.WebApi.csproj" />
+    <ProjectReference Include="..\BankingApp.WebApi\BankingApp.Api.csproj" />
   </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="coverlet.collector" Version="6.0.4">
