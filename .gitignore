@@ -71,3 +71,5 @@
 /CoverageReport/main.js
 /CoverageReport/report.css
 /.vs/slnx.sqlite
+/ExcelUpload/BankingExcelUpload.POC/bin/Debug/net5.0
+/ExcelUpload/BankingExcelUpload.POC/obj
