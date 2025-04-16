@@ -1,15 +1,14 @@
-using NUnit.Framework;
-using Moq;
 using AutoMapper;
 using BankingApp.Application.DTOs;
 using BankingApp.Application.UseCases;
 using BankingApp.Application.Validation;
-using BankingApp.Core.Ports.Output;
 using BankingApp.Core.Entities;
-using System.Threading.Tasks;
-using System;
-using BankingApp.Infrastructure.Adapters.Output.Repositories;
+using BankingApp.Core.Ports.Output;
 using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System;
+using System.Threading.Tasks;
 
 namespace BankingApp.Tests.UseCases
 {

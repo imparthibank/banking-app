@@ -7,7 +7,7 @@ using BankingApp.Core.Entities;
 using System;
 using System.Threading.Tasks;
 
-namespace BankingApp.Tests.Validation
+namespace BankingApp.Application.Tests.Validation
 {
     public class BankAccountValidatorTests
     {

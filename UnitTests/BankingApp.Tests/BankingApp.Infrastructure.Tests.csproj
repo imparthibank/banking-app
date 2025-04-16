@@ -1,24 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 
 	</PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BankingApp.Application\BankingApp.Application.csproj" />
-    <ProjectReference Include="..\BankingApp.Core\BankingApp.Core.csproj" />
-    <ProjectReference Include="..\BankingApp.Infrastructure\BankingApp.Infrastructure.csproj" />
-    <ProjectReference Include="..\BankingApp.WebApi\BankingApp.Api.csproj" />
-  </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="coverlet.collector" Version="6.0.4">
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		  <PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
 		<PackageReference Include="Moq" Version="4.18.4" />
 		<PackageReference Include="NUnit" Version="3.13.3" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
 		<PackageReference Include="AutoMapper" Version="10.1.1" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\BankingApp.Application\BankingApp.Application.csproj" />
+	  <ProjectReference Include="..\..\BankingApp.Infrastructure\BankingApp.Infrastructure.csproj" />
 	</ItemGroup>
 </Project>

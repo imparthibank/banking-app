@@ -10,12 +10,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp.Core", "BankingA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp.Infrastructure", "BankingApp.Infrastructure\BankingApp.Infrastructure.csproj", "{9D148814-13F1-4597-85F4-0A44A14B66D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp.Tests", "BankingApp.Tests\BankingApp.Tests.csproj", "{4DAF254B-B683-4AE1-A32E-976327D7C0FA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp.DataBase", "BankingApp.DataBase\BankingApp.DataBase.csproj", "{C38247E4-D02A-4EC3-8019-8F340EC66F6E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
+		APIDesign.cd = APIDesign.cd
 		generate_coverage.bat = generate_coverage.bat
 	EndProjectSection
 EndProject
@@ -24,6 +23,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingExcelUpload.POC", "ExcelUpload\BankingExcelUpload.POC\BankingExcelUpload.POC.csproj", "{5894D9F9-892A-497A-AB34-04A468DD90C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelBenchmark.PlayGround", "ExcelUpload\ExcelBenchmark.PlayGround\ExcelBenchmark.PlayGround.csproj", "{57C14941-8720-4C03-8C0F-C5EA1E546908}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{41CBD892-C0CE-4BFD-ADEA-0850ECC4A56E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp.Application.Tests", "UnitTests\BankingApp.Application.Tests\BankingApp.Application.Tests.csproj", "{133073E6-AC74-4E05-8CBD-E8488A9CC759}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp.Infrastructure.Tests", "UnitTests\BankingApp.Tests\BankingApp.Infrastructure.Tests.csproj", "{BD151587-FF5C-330E-D791-EE05D8850B2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingApp.Api.Tests", "UnitTests\BankingApp.Api.Tests\BankingApp.Api.Tests.csproj", "{E17FE24F-3B1E-629F-9FE5-85861C4E150E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +54,6 @@ Global
 		{9D148814-13F1-4597-85F4-0A44A14B66D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D148814-13F1-4597-85F4-0A44A14B66D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D148814-13F1-4597-85F4-0A44A14B66D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DAF254B-B683-4AE1-A32E-976327D7C0FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DAF254B-B683-4AE1-A32E-976327D7C0FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DAF254B-B683-4AE1-A32E-976327D7C0FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DAF254B-B683-4AE1-A32E-976327D7C0FA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C38247E4-D02A-4EC3-8019-8F340EC66F6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C38247E4-D02A-4EC3-8019-8F340EC66F6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C38247E4-D02A-4EC3-8019-8F340EC66F6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -63,6 +66,18 @@ Global
 		{57C14941-8720-4C03-8C0F-C5EA1E546908}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57C14941-8720-4C03-8C0F-C5EA1E546908}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57C14941-8720-4C03-8C0F-C5EA1E546908}.Release|Any CPU.Build.0 = Release|Any CPU
+		{133073E6-AC74-4E05-8CBD-E8488A9CC759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{133073E6-AC74-4E05-8CBD-E8488A9CC759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{133073E6-AC74-4E05-8CBD-E8488A9CC759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{133073E6-AC74-4E05-8CBD-E8488A9CC759}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD151587-FF5C-330E-D791-EE05D8850B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD151587-FF5C-330E-D791-EE05D8850B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD151587-FF5C-330E-D791-EE05D8850B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD151587-FF5C-330E-D791-EE05D8850B2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E17FE24F-3B1E-629F-9FE5-85861C4E150E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E17FE24F-3B1E-629F-9FE5-85861C4E150E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E17FE24F-3B1E-629F-9FE5-85861C4E150E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E17FE24F-3B1E-629F-9FE5-85861C4E150E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +85,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{5894D9F9-892A-497A-AB34-04A468DD90C5} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{57C14941-8720-4C03-8C0F-C5EA1E546908} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{133073E6-AC74-4E05-8CBD-E8488A9CC759} = {41CBD892-C0CE-4BFD-ADEA-0850ECC4A56E}
+		{BD151587-FF5C-330E-D791-EE05D8850B2C} = {41CBD892-C0CE-4BFD-ADEA-0850ECC4A56E}
+		{E17FE24F-3B1E-629F-9FE5-85861C4E150E} = {41CBD892-C0CE-4BFD-ADEA-0850ECC4A56E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {908C0AE9-61D0-4C2C-B4D4-B6EBEED8E4E1}

@@ -1,13 +1,16 @@
-using NUnit.Framework;
-using Moq;
-using BankingApp.Application.DTOs;
+﻿using BankingApp.Application.DTOs;
 using BankingApp.Application.Ports.Input;
 using BankingApp.WebApi.Adapters.Input.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using Moq;
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace BankingApp.Tests.Adapters.Input.Controllers
+namespace BankingApp.Api.Tests.Adapters.Inputs.Controllers
 {
     public class BankAccountControllerTests
     {
