@@ -1,17 +1,15 @@
 ﻿<#
 .SYNOPSIS
     Unified TeamCity Build Pipeline Script for .NET 8 Projects
-
 .DESCRIPTION
     - Restores solution
     - Starts SonarQube analysis
     - Builds solution
-    - Runs tests with coverage (centralized results + unique trx filenames)
-    - Imports all TRX results into TeamCity
-    - Publishes artifacts
-    - Reports Code Coverage statistics to TeamCity
+    - Runs tests per project with coverage (unique TRX for each)
+    - Imports all results into TeamCity and pushes statistics
+    - Publishes coverage + test artifacts
+    - Optionally publishes selected projects
     - Ends SonarQube analysis
-    - Optionally publishes projects
 #>
 
 param(
@@ -31,15 +29,16 @@ function Log-Info($message) {
 function Fail-OnError($message) {
     if ($LASTEXITCODE -ne 0) {
         Write-Error "❌ $message"
+        Write-Host "##teamcity[buildProblem description='$message']"
         exit 1
     }
 }
 
-function TeamCity-ProgressStart($message) {
+function TC-ProgressStart($message) {
     Write-Host "##teamcity[progressStart '$message']"
 }
 
-function TeamCity-ProgressFinish($message) {
+function TC-ProgressFinish($message) {
     Write-Host "##teamcity[progressFinish '$message']"
 }
 
@@ -51,16 +50,16 @@ if (-not (Test-Path $ArtifactsDir)) {
 # -----------------------
 # Step 1: Restore Solution
 # -----------------------
-TeamCity-ProgressStart "Restoring Solution"
+TC-ProgressStart "Restoring Solution"
 Log-Info "Restoring solution..."
 dotnet restore $SolutionPath
 Fail-OnError "Restore failed"
-TeamCity-ProgressFinish "Restoring Solution"
+TC-ProgressFinish "Restoring Solution"
 
 # -----------------------
 # Step 2: SonarQube Begin
 # -----------------------
-TeamCity-ProgressStart "Starting SonarQube Analysis - BEGIN"
+TC-ProgressStart "Starting SonarQube Analysis - BEGIN"
 Log-Info "Starting SonarQube Analysis..."
 
 $params = @{
@@ -85,97 +84,100 @@ dotnet sonarscanner begin `
     /d:sonar.login="$($params.Login)" `
     /v:"$($params.Version)" `
     /d:sonar.branch.name="$($params.Branch)" `
-    /d:sonar.cs.opencover.reportsPaths="$ArtifactsDir/**/*.xml" `
-    /d:sonar.cs.vstest.reportsPaths="$ArtifactsDir/**/*.trx" `
+    /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" `
+    /d:sonar.cs.vstest.reportsPaths="**/*.trx" `
     /d:sonar.exclusions="**/bin/**,**/obj/**" `
     /d:sonar.java.home="$($params.JavaHome)"
 Fail-OnError "SonarQube begin failed"
-TeamCity-ProgressFinish "Starting SonarQube Analysis - BEGIN"
+TC-ProgressFinish "Starting SonarQube Analysis - BEGIN"
 
 # -----------------------
 # Step 3: Build Solution
 # -----------------------
-TeamCity-ProgressStart "Building Solution"
+TC-ProgressStart "Building Solution"
 Log-Info "Building solution..."
 dotnet build $SolutionPath --no-incremental -c Release
 Fail-OnError "Build failed"
-TeamCity-ProgressFinish "Building Solution"
+TC-ProgressFinish "Building Solution"
 
 # -----------------------
-# Step 4: Run Tests + Coverage
+# Step 4: Run Tests Per Project (Unique TRX + Coverage)
 # -----------------------
-TeamCity-ProgressStart "Running Unit Tests with Coverage"
-Log-Info "Running tests with coverage..."
+TC-ProgressStart "Running Unit Tests"
+Log-Info "Running tests with coverage per project..."
 
-$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$testProjects = Get-ChildItem (Split-Path $SolutionPath -Parent) -Recurse -Filter *.csproj |
+    Where-Object { $_.DirectoryName -match "Test" -and $_.Name -notmatch "Integration" }
 
-dotnet test $SolutionPath `
-    --no-build -c Release `
-    --filter "$Filter" `
-    --results-directory "$ArtifactsDir" `
-    --logger:"trx;LogFileName=test_results_$timestamp.trx" `
-    --collect:"XPlat Code Coverage" `
-    -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-Fail-OnError "Tests failed"
-TeamCity-ProgressFinish "Running Unit Tests with Coverage"
+$trxFiles = @()
+$totalTests = 0; $passedTests = 0; $failedTests = 0
 
-# Locate and log coverage reports
-$coverageReports = Get-ChildItem -Path $ArtifactsDir -Recurse -Filter "coverage.opencover.xml"
-if ($coverageReports) {
-    Log-Info "Coverage reports generated:"
-    $totalLines = 0
-    $coveredLines = 0
+foreach ($proj in $testProjects) {
+    $projName = $proj.BaseName
+    $trxFile = Join-Path $ArtifactsDir "$($projName)_$(Get-Date -Format 'yyyyMMddHHmmssfff').trx"
+    $trxFiles += $trxFile
 
-    foreach ($report in $coverageReports) {
-        Log-Info "  $($report.FullName)"
-        [xml]$xml = Get-Content $report.FullName
-        foreach ($module in $xml.CoverageSession.Modules.Module) {
-            foreach ($file in $module.Files.File) {
-                $lines = $module.Classes.Class.Methods.Method.SequencePoints.SequencePoint
-                if ($lines) {
-                    $totalLines += $lines.Count
-                    $coveredLines += ($lines | Where-Object { $_.vc -gt 0 }).Count
-                }
-            }
-        }
-    }
+    Log-Info "Running tests for $projName"
+    Write-Host "##teamcity[progressMessage 'Running tests for $projName']"
 
-    if ($totalLines -gt 0) {
-        $coveragePercent = [math]::Round(($coveredLines / $totalLines) * 100, 2)
-        Log-Info "Code Coverage: $coveragePercent% ($coveredLines/$totalLines)"
-
-        # Report coverage stats to TeamCity
-        Write-Host "##teamcity[buildStatisticValue key='CodeCoverageAbsLTotal' value='$totalLines']"
-        Write-Host "##teamcity[buildStatisticValue key='CodeCoverageAbsLCovered' value='$coveredLines']"
-        Write-Host "##teamcity[buildStatisticValue key='CodeCoverageL' value='$coveragePercent']"
-    } else {
-        Write-Warning "⚠ No sequence points found in coverage reports!"
-    }
-} else {
-    Write-Warning "⚠ No coverage.opencover.xml found!"
+    dotnet test $proj.FullName `
+        --no-build -c Release `
+        --filter "$Filter" `
+        --results-directory "$ArtifactsDir" `
+        --logger:"trx;LogFileName=$([IO.Path]::GetFileName($trxFile))" `
+        --collect:"XPlat Code Coverage" `
+        -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+    Fail-OnError "Tests failed for $projName"
 }
 
-# Locate and log TRX results (import all for full count)
-$trxReports = Get-ChildItem -Path $ArtifactsDir -Recurse -Filter "*.trx"
-if ($trxReports) {
-    Log-Info "TRX test results generated:"
-    foreach ($trx in $trxReports) {
-        Log-Info "  $($trx.FullName)"
-        Write-Host "##teamcity[importData type='vstest' path='$($trx.FullName)']"
+# Wait and import all TRX files
+foreach ($file in $trxFiles) {
+    $retries = 5
+    while (-not (Test-Path $file) -and $retries -gt 0) {
+        Start-Sleep -Seconds 1
+        $retries--
     }
-} else {
-    Write-Warning "⚠ No .trx test results found!"
 }
 
-# Publish artifacts (zip)
+foreach ($trx in $trxFiles) {
+    if (Test-Path $trx) {
+        Write-Host "##teamcity[importData type='vstest' path='$trx']"
+
+        # Parse TRX and aggregate statistics
+        [xml]$trxXml = Get-Content $trx
+        $results = $trxXml.TestRun.Results.UnitTestResult
+        $totalTests += $results.Count
+        $passedTests += ($results | Where-Object { $_.outcome -eq "Passed" }).Count
+        $failedTests += ($results | Where-Object { $_.outcome -eq "Failed" }).Count
+    }
+}
+
+Write-Host "##teamcity[buildStatisticValue key='TotalTests' value='$totalTests']"
+Write-Host "##teamcity[buildStatisticValue key='PassedTests' value='$passedTests']"
+Write-Host "##teamcity[buildStatisticValue key='FailedTests' value='$failedTests']"
+Log-Info "Test Summary: Passed=$passedTests / Failed=$failedTests / Total=$totalTests"
+
+if ($failedTests -gt 0) {
+    Write-Host "##teamcity[buildProblem description='Some tests failed: $failedTests failed out of $totalTests']"
+}
+
+# Copy coverage files
+$coverageReports = Get-ChildItem -Path (Split-Path $SolutionPath -Parent) -Recurse -Filter "coverage.opencover.xml"
+foreach ($report in $coverageReports) {
+    Log-Info "Coverage report: $($report.FullName)"
+    Copy-Item $report.FullName $ArtifactsDir -Force
+}
+
 Write-Host "##teamcity[publishArtifacts '$ArtifactsDir => TestArtifacts.zip']"
-Log-Info "Published artifacts to TeamCity: TestArtifacts.zip"
+Log-Info "Published test artifacts to TeamCity"
+
+TC-ProgressFinish "Running Unit Tests"
 
 # -----------------------
 # Step 5: Optional Publish Projects
 # -----------------------
 if ($PublishProjects) {
-    TeamCity-ProgressStart "Publishing Projects"
+    TC-ProgressStart "Publishing Projects"
     $rootPath = "Projects"
     $projects = $PublishProjects.Split(',')
 
@@ -190,16 +192,16 @@ if ($PublishProjects) {
         Fail-OnError "Publish failed for $proj"
         Write-Host "##teamcity[publishArtifacts 'publish/$($proj)']"
     }
-    TeamCity-ProgressFinish "Publishing Projects"
+    TC-ProgressFinish "Publishing Projects"
 }
 
 # -----------------------
 # Step 6: SonarQube End
 # -----------------------
-TeamCity-ProgressStart "Ending SonarQube Analysis - END"
+TC-ProgressStart "Ending SonarQube Analysis - END"
 Log-Info "Ending SonarQube analysis..."
 dotnet sonarscanner end /d:sonar.login="$($params.Login)"
 Fail-OnError "SonarQube end failed"
-TeamCity-ProgressFinish "Ending SonarQube Analysis - END"
+TC-ProgressFinish "Ending SonarQube Analysis - END"
 
 Log-Info "✅ Build pipeline completed successfully!"
