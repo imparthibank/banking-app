@@ -20,13 +20,20 @@ namespace BankingApp.Tests.Adapters.Output.Repositories
         private Mock<ILogger<BankAccountRepository>> _loggerMock;
         private IDbConnection _connection;
 
+        [TearDown]
+        public void TearDown()
+        {
+            // Dispose of the connection to ensure proper cleanup
+            _connection?.Dispose();
+        }
+
         [SetUp]
         public void Setup()
         {
             var config = new ConfigurationBuilder()
                 .AddInMemoryCollection(new[]
                 {
-                    new KeyValuePair<string, string>("ConnectionStrings:Postgres", "Host=localhost;Port=5432;Database=BankingTestDb;Username=postgres;Password=Admin@123")
+                        new KeyValuePair<string, string>("ConnectionStrings:Postgres", "Host=localhost;Port=5432;Database=BankingTestDb;Username=postgres;Password=Admin@123")
                 })
                 .Build();
 

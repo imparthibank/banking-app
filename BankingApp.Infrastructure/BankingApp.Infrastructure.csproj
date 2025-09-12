@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
-  <ItemGroup>
+	<ItemGroup>
     <ProjectReference Include="..\BankingApp.Core\BankingApp.Core.csproj" />
   </ItemGroup>
 	<ItemGroup>
