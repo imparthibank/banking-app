@@ -35,6 +35,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{2FA6DE8E-5FC3-492A-9530-4BBED0946B19}"
 	ProjectSection(SolutionItems) = preProject
 		Build-Pipeline.ps1 = Build-Pipeline.ps1
+		ReliableTestCountInCI.ps1 = ReliableTestCountInCI.ps1
 		run-build-tests.ps1 = run-build-tests.ps1
 		RunTestsWithCoverage.ps1 = RunTestsWithCoverage.ps1
 		Updated-build-scrpit.ps1 = Updated-build-scrpit.ps1
